@@ -200,25 +200,25 @@ void checkCondition(TBMessage &msg){
   debugP("LDR1  "+String(ldr1Adc));
   debugP("LDR2  "+String(ldr2Adc));
 
-  if (ldr1Adc >= 100) ldr1Stat = 0;
-  if (ldr2Adc >= 100) ldr2Stat = 0;
+  if (ldr1Adc <= 10000) ldr1Stat = 0;
+  if (ldr2Adc <= 10000) ldr2Stat = 0;
 
-  if (lamp1Condition == "Baik" && lamp1Stat == 0 && lamp1Adc < 100 && ldr1Stat == 0){
+  if (lamp1Condition == "Baik" && lamp1Stat == 0 && lamp1Adc < 8800 && ldr1Stat == 0){
     lamp1Condition = "Rusak";
     arus1 = "-";
     teleBot.sendMessage(msg, "Lampu 1 rusak !");
   }
-  else if (lamp1Condition == "Rusak" && lamp1Adc > 100){
+  else if (lamp1Condition == "Rusak" && lamp1Adc > 8800){
     lamp1Condition = "Baik";
     arus1 = "OK";
   }
 
-  if (lamp2Condition == "Baik" && lamp2Stat == 0 && lamp2Adc < 100 && ldr2Stat == 0){
+  if (lamp2Condition == "Baik" && lamp2Stat == 0 && lamp2Adc < 8800 && ldr2Stat == 0){
     lamp2Condition = "Rusak";
     arus2 = "-";
     teleBot.sendMessage(msg, "Lampu 2 rusak !");
   }
-  else if (lamp2Condition == "Rusak" && lamp2Adc > 100){
+  else if (lamp2Condition == "Rusak" && lamp2Adc > 8800){
     lamp2Condition = "Baik";
     arus2 = "OK";
   }
