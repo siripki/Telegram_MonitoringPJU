@@ -52,8 +52,8 @@ bool lamp1Stat = true;
 bool lamp2Stat = true;
 String lamp1Condition = "Baik";
 String lamp2Condition = "Baik";
-String arus1;
-String arus2;
+String arus1 = "-";
+String arus2 = "-";
 
 void setup() {
   pinMode(lamp1Pin, OUTPUT);
@@ -115,11 +115,11 @@ void loop() {
   TBMessage msg;
   incomingMsgHandling(msg);
 
-  static uint32_t checkInterval = 0;
-  if (millis() - checkInterval > 1000) {
-    checkCondition(msg);
-    checkInterval = millis();
-  }
+  // static uint32_t checkInterval = 0;
+  // if (millis() - checkInterval > 1000) {
+  //   checkCondition(msg);
+  //   checkInterval = millis();
+  // }
   
 }
 
@@ -152,19 +152,19 @@ void incomingMsgHandling(TBMessage &msg) {
       String reply;
       reply = "Informasi" ;
       reply += "\nLampu 1";
-      reply += "\nStatus :";
+      reply += "\nStatus : ";
       reply += slamp1Stat;
-      reply += "\nKondisi:";
+      reply += "\nKondisi: ";
       reply += lamp1Condition;
-      reply += "\nArus   :";
+      reply += "\nArus   : ";
       reply += arus1;
       reply += "\n ";
       reply += "\nLampu 2";
-      reply += "\nStatus :";
+      reply += "\nStatus : ";
       reply += slamp2Stat;
-      reply += "\nKondisi:";
+      reply += "\nKondisi: ";
       reply += lamp2Condition;
-      reply += "\nArus   :";
+      reply += "\nArus   : ";
       reply += arus2;
       teleBot.sendMessage(msg, reply);    
     }
@@ -181,10 +181,10 @@ void incomingMsgHandling(TBMessage &msg) {
       reply += "\n/info";
       teleBot.sendMessage(msg, reply);                    // and send it
     }
-
     digitalWrite(lamp1Pin, lamp1Stat);
     digitalWrite(lamp2Pin, lamp2Stat);
   }
+  checkCondition(msg);
 }
 
 void checkCondition(TBMessage &msg){
@@ -200,8 +200,8 @@ void checkCondition(TBMessage &msg){
   debugP("LDR1  "+String(ldr1Adc));
   debugP("LDR2  "+String(ldr2Adc));
 
-  if (ldr1Adc <= 10000) ldr1Stat = 0;
-  if (ldr2Adc <= 10000) ldr2Stat = 0;
+  if (ldr1Adc >= 3000) ldr1Stat = 0;
+  if (ldr2Adc >= 3000) ldr2Stat = 0;
 
   if (lamp1Condition == "Baik" && lamp1Stat == 0 && lamp1Adc < 8800 && ldr1Stat == 0){
     lamp1Condition = "Rusak";
@@ -222,4 +222,5 @@ void checkCondition(TBMessage &msg){
     lamp2Condition = "Baik";
     arus2 = "OK";
   }
+  delay(100);
 }
