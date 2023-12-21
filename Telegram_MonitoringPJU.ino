@@ -40,7 +40,7 @@ Adafruit_ADS1115 ads;
 
 const char* APssid  =  "Monitoring PJU";     // SSID WiFi network
 const char* APpass  =  "12345678";     // Password  WiFi network
-const char* token =  "6797807079:AAEVc81RUZ9uKbleaj3WwoCnBihD4yOAqjM";  // Telegram token
+const char* token =  "6302352184:AAFl_8lq3vgNN2BemJRIObhqC0Zu3Aav79w";  // Telegram token
 
 byte lamp1Pin = 12; //D6
 byte lamp2Pin = 13; //D7
@@ -58,6 +58,8 @@ String arus2;
 void setup() {
   pinMode(lamp1Pin, OUTPUT);
   pinMode(lamp2Pin, OUTPUT);
+  digitalWrite(lamp1Pin, lamp1Stat);
+  digitalWrite(lamp2Pin, lamp2Stat);
   // pinMode(ldr1Pin, INPUT);
   // pinMode(ldr2Pin, INPUT);
   Serial.begin(115200);
