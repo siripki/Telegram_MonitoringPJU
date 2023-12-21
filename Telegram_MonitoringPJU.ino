@@ -1,3 +1,12 @@
+#define debugMode 1 //debugMode 1 enable common print serial, 0 only print error
+#if debugMode == 1
+#define debugP(x) Serial.println(x) //printSerial
+#define debugE(y) Serial.println(y) //printError
+#else
+#define debugP(x)
+#define debugE(y) Serial.println(y)
+#endif
+
 #define USE_CLIENTSSL true 
 #define MYTZ "CET-1CEST,M3.5.0,M10.5.0/3"
 
@@ -184,7 +193,11 @@ void checkCondition(TBMessage &msg){
   lamp2Adc = ads.readADC_SingleEnded(1);
   ldr1Adc = ads.readADC_SingleEnded(2);
   ldr2Adc = ads.readADC_SingleEnded(3);
-  
+  debugP("Arus1 "+String(lamp1Adc));
+  debugP("Arus2 "+String(lamp2Adc));
+  debugP("LDR1  "+String(ldr1Adc));
+  debugP("LDR2  "+String(ldr2Adc));
+
   if (ldr1Adc >= 100) ldr1Stat = 0;
   if (ldr2Adc >= 100) ldr2Stat = 0;
 
