@@ -1,3 +1,7 @@
+/*
+Note :
+- Based on ESP8266 V2.6.3
+*/
 #define debugMode 1 //debugMode 1 enable common print serial, 0 only print error
 #if debugMode == 1
 #define debugP(x) Serial.println(x) //printSerial
@@ -60,8 +64,6 @@ void setup() {
   pinMode(lamp2Pin, OUTPUT);
   digitalWrite(lamp1Pin, lamp1Stat);
   digitalWrite(lamp2Pin, lamp2Stat);
-  // pinMode(ldr1Pin, INPUT);
-  // pinMode(ldr2Pin, INPUT);
   Serial.begin(115200);
 
   // WiFi.mode(WIFI_STA);
@@ -71,6 +73,7 @@ void setup() {
   //   Serial.print('.');
   //   delay(100);
   // }
+
   WiFiManager WM;
   WM.setConnectTimeout(10);
   if (WM.autoConnect(APssid, APpass)) {
@@ -97,7 +100,7 @@ void setup() {
 #endif
   
   // Set the Telegram bot properies
-  teleBot.setUpdateTime(500);
+  teleBot.setUpdateTime(2000);
   teleBot.setTelegramToken(token);
 
   // Check if all things are ok
@@ -147,7 +150,7 @@ void incomingMsgHandling(TBMessage &msg) {
       String slamp1Stat = "OFF";
       String slamp2Stat = "OFF";
       if (lamp1Stat == 0) slamp1Stat = "ON";
-      if (lamp1Stat == 0) slamp2Stat = "ON";
+      if (lamp2Stat == 0) slamp2Stat = "ON";
       
       String reply;
       reply = "Informasi" ;
@@ -203,24 +206,46 @@ void checkCondition(TBMessage &msg){
   if (ldr1Adc >= 3000) ldr1Stat = 0;
   if (ldr2Adc >= 3000) ldr2Stat = 0;
 
-  if (lamp1Condition == "Baik" && lamp1Stat == 0 && lamp1Adc < 8800 && ldr1Stat == 0){
+  if (lamp1Condition == "Baik" && lamp1Stat == 0 && ldr1Stat == 0){
     lamp1Condition = "Rusak";
     arus1 = "-";
     teleBot.sendMessage(msg, "Lampu 1 rusak !");
   }
-  else if (lamp1Condition == "Rusak" && lamp1Adc > 8800){
+  else if (lamp1Condition == "Rusak" && lamp1Stat == 0 && ldr1Stat == 1){
     lamp1Condition = "Baik";
     arus1 = "OK";
+    teleBot.sendMessage(msg, "Lampu 1 OK");
   }
 
-  if (lamp2Condition == "Baik" && lamp2Stat == 0 && lamp2Adc < 8800 && ldr2Stat == 0){
+  if (lamp2Condition == "Baik" && lamp2Stat == 0 && ldr2Stat == 0){
     lamp2Condition = "Rusak";
     arus2 = "-";
     teleBot.sendMessage(msg, "Lampu 2 rusak !");
   }
-  else if (lamp2Condition == "Rusak" && lamp2Adc > 8800){
+  else if (lamp2Condition == "Rusak" && lamp2Stat == 0 && ldr2Stat == 1){
     lamp2Condition = "Baik";
     arus2 = "OK";
+    teleBot.sendMessage(msg, "Lampu 2 OK");
   }
+
+  // if (lamp1Condition == "Baik" && lamp1Stat == 0 && (lamp1Adc > 13150 || ldr1Stat == 0)){
+  //   lamp1Condition = "Rusak";
+  //   arus1 = "-";
+  //   teleBot.sendMessage(msg, "Lampu 1 rusak !");
+  // }
+  // else if (lamp1Condition == "Rusak" && (lamp1Adc < 13150 || ldr1Stat == 1)){
+  //   lamp1Condition = "Baik";
+  //   arus1 = "OK";
+  // }
+
+  // if (lamp2Condition == "Baik" && lamp2Stat == 0 && (lamp2Adc > 13100 || ldr2Stat == 0)){
+  //   lamp2Condition = "Rusak";
+  //   arus2 = "-";
+  //   teleBot.sendMessage(msg, "Lampu 2 rusak !");
+  // }
+  // else if (lamp2Condition == "Rusak" && (lamp2Adc < 13100 || ldr2Stat == 1)){
+  //   lamp2Condition = "Baik";
+  //   arus2 = "OK";
+  // }
   delay(100);
 }
